@@ -1,3 +1,6 @@
+-- Define o Valor Pt-BR para o banco
+SET lc_time_names = 'pt_BR';
+
 -- Verifica se a Tabela já não existe
 DROP TABLE IF EXISTS numbers_small;
 -- Cria a Tabela
@@ -25,7 +28,7 @@ day_of_month     INT,
 day_of_year      INT,
 previous_day     date,
 next_day         date,
-type_day         CHAR(10) NOT NULL DEFAULT "Day",
+type_day         CHAR(20) NOT NULL DEFAULT "Weekday",
 week_of_year     CHAR(2),
 month            CHAR(10),
 month_of_year    CHAR(2),
@@ -35,7 +38,7 @@ UNIQUE KEY `date` (`date`));
 
 -- Insere os valores
 INSERT INTO Dates_D (date_id, date)
-SELECT number, DATE_ADD( '2010-01-01', INTERVAL number DAY )
+SELECT number, DATE_ADD( '2017-01-01', INTERVAL number DAY )
 FROM numbers
 WHERE DATE_ADD( '2017-01-01', INTERVAL number DAY ) BETWEEN '2017-01-01' AND '2030-12-31'
 ORDER BY number;
@@ -48,9 +51,13 @@ day_of_month    = DATE_FORMAT( date, "%d" ),
 day_of_year     = DATE_FORMAT( date, "%j" ),
 previous_day    = DATE_ADD(date, INTERVAL -1 DAY),
 next_day        = DATE_ADD(date, INTERVAL 1 DAY),
-type_day        = IF( DATE_FORMAT( date, "%W" ) IN ('Saturday','Sunday'), 'Weekend', 'Weekday'),
+type_day        = IF( DATE_FORMAT( date, "%W" ) IN ('Sábado','Domingo'), 'Final de Semana', 'Dia de Semana'),
 week_of_year    = DATE_FORMAT( date, "%V" ),
 month           = DATE_FORMAT( date, "%M"),
 month_of_year   = DATE_FORMAT( date, "%m"),
 quarter_of_year = QUARTER(date),
 year            = DATE_FORMAT( date, "%Y" );
+
+-- Remove as Tabelas Temporarias
+DROP TABLE numbers_small;
+DROP TABLE numbers;
